@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificando Chave</title>
+  <script>
+    // Pega o token da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const userId = urlParams.get('user'); // Pega o ID do usuário
+
+    if (token && userId) {
+      // Faz a requisição para o seu Google Apps Script para verificar a chave
+      fetch(`https://script.google.com/macros/s/AKfycbyu_qXx3rXQmX4Xw_9c0O-dbAbSjxgmje1LOC3XpHRousUjW4S33CaoAjnDTyIzjwHoiQ/exec?action=verify&token=${token}&user=${userId}`)
+        .then(response => response.text())
+        .then(data => {
+          if (data.includes('Chave válida')) {
+            alert('Chave validada com sucesso!');
+            window.location.href = 'https://seuapp.com/sucesso'; // Redireciona para o sucesso
+          } else {
+            alert('Erro: Chave inválida ou expirada.');
+            window.location.href = 'https://seuapp.com/erro'; // Redireciona para a página de erro
+          }
+        })
+        .catch(error => {
+          alert('Erro ao verificar chave. Tente novamente.');
+          console.error('Erro ao verificar chave:', error);
+        });
+    } else {
+      alert('Token ou usuário ausente.');
+      window.location.href = 'https://seuapp.com/erro';
+    }
+  </script>
+</head>
+<body>
+  <h1>Verificando sua chave...</h1>
+  <p>Aguarde enquanto validamos sua chave...</p>
+</body>
+</html>
